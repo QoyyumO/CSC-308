@@ -1,3 +1,8 @@
+/* Using C Switch statement, write a program that accepts 
+any character, float or integer, and prints the next four 
+corresponding characters, floats or integers in multiples 
+of 3, print the ASCII code and the size of the Operator*/
+
 #include <stdio.h>
 
 int main() {
