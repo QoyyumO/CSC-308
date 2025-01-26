@@ -109,7 +109,7 @@ impl FrameBufferWriter {
                 }
                 let new_ypos = self.y_pos + font_constants::CHAR_RASTER_HEIGHT.val() + BORDER_PADDING;
                 if new_ypos >= self.height() {
-                    self.clear();
+                    self.scroll_screen();
                 }
                 self.write_rendered_char(get_char_raster(c));
             }
