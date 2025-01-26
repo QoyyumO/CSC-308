@@ -1,0 +1,1 @@
+/home/qoyyumo/csc308/macros_os/target/debug/macros_os: /home/qoyyumo/csc308/macros_os/build.rs /home/qoyyumo/csc308/macros_os/macros_kernel/src/main.rs /home/qoyyumo/csc308/macros_os/macros_kernel/src/writer/constants.rs /home/qoyyumo/csc308/macros_os/macros_kernel/src/writer.rs /home/qoyyumo/csc308/macros_os/src/main.rs

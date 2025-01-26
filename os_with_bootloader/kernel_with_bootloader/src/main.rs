@@ -14,6 +14,7 @@ fn panic(_info: &core::panic::PanicInfo) -> ! {
     }
 }
 
+
 // Use the entry_point macro to register the entry point function:
 // bootloader_api::entry_point!(kernel_main)
 // Optionally pass a custom config
@@ -42,9 +43,10 @@ fn my_entry_point(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     writeln!(frame_buffer_writer, "This text follows the previous line.").unwrap();
 
     // Test screen scrolling by writing multiple lines
-    for i in 0..40 {
+    for i in 0..5 {
         writeln!(frame_buffer_writer, "Line {}: Testing screen scrolling...", i).unwrap();
     }
+
 
     // Set the cursor to a position near the bottom of the screen
     frame_buffer_writer.set_cursor_position(500, frame_buffer_info.height - 50 );

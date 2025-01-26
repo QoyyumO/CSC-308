@@ -1,0 +1,14 @@
+[package]
+name = "macros_os"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+ovmf-prebuilt = "0.1.0-alpha.1"
+
+[build-dependencies]
+bootloader = "0.11"
+macros_kernel = { path = "macros_kernel", artifact = "bin", target = "x86_64-unknown-none" }
+
+[workspace]
+members = ["macros_kernel"]

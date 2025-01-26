@@ -1,0 +1,9 @@
+/home/qoyyumo/csc308/macros_os/target/debug/deps/libonce_cell-ff4ab3e8740aead8.rmeta: /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/lib.rs /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/imp_std.rs /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/race.rs
+
+/home/qoyyumo/csc308/macros_os/target/debug/deps/libonce_cell-ff4ab3e8740aead8.rlib: /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/lib.rs /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/imp_std.rs /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/race.rs
+
+/home/qoyyumo/csc308/macros_os/target/debug/deps/once_cell-ff4ab3e8740aead8.d: /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/lib.rs /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/imp_std.rs /home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/race.rs
+
+/home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/lib.rs:
+/home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/imp_std.rs:
+/home/qoyyumo/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/once_cell-1.20.2/src/race.rs:
