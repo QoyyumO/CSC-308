@@ -1,0 +1,3 @@
+std::env::var_os('OUT_DIR') = "/home/qoyyumo/csc308/os_with_bootloader/target/debug/build/os_with_bootloader-1fc8bb6bc6da077f/out"
+cargo:rustc-env=UEFI_PATH=/home/qoyyumo/csc308/os_with_bootloader/target/debug/build/os_with_bootloader-1fc8bb6bc6da077f/out/uefi.img
+cargo:rustc-env=BIOS_PATH=/home/qoyyumo/csc308/os_with_bootloader/target/debug/build/os_with_bootloader-1fc8bb6bc6da077f/out/bios.img
