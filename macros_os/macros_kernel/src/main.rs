@@ -26,13 +26,13 @@ pub static BOOTLOADER_CONFIG: bootloader_api::BootloaderConfig = {
 
 bootloader_api::entry_point!(my_entry_point, config = &BOOTLOADER_CONFIG);
 
-fn my_entry_point(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
-    let frame_buffer_info = boot_info.framebuffer.as_mut().unwrap().info();
-    let buffer = boot_info.framebuffer.as_mut().unwrap().buffer_mut();
+fn my_entry_point(_boot_info: &'static mut bootloader_api::BootInfo) -> ! {
+    let frame_buffer_info = _boot_info.framebuffer.as_mut().unwrap().info();
+    let buffer = _boot_info.framebuffer.as_mut().unwrap().buffer_mut();
     let mut frame_buffer_writer = FrameBufferWriter::new(buffer, frame_buffer_info);
 
 
-    print!(frame_buffer_writer, "Hello, world!\nThis is a test.\nBlue Text\tIndented Text");
+    frame_buffer_writer.print("Hello, world!\nThis is a test.\n\\cBlue text\\r \tIndented Text");  
 
     // Loop forever to keep the kernel running
     loop {

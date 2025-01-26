@@ -18,6 +18,10 @@ const LETTER_SPACING: usize = 0;
 /// Padding from the border. Prevent that font is too close to border.
 const BORDER_PADDING: usize = 1;
 
+// ANSI-like color codes
+const COLOR_BLUE: [u8; 3] = [255, 0, 0]; // RGB for blue
+const COLOR_WHITE: [u8; 3] = [255, 255, 255]; // RGB for white (default color)
+
 /// Returns the raster of the given char or the raster of [font_constants::BACKUP_CHAR].
 fn get_char_raster(c: char) -> RasterizedChar {
     fn get(c: char) -> Option<RasterizedChar> {
@@ -39,6 +43,7 @@ pub struct FrameBufferWriter {
     info: FrameBufferInfo,
     x_pos: usize,
     y_pos: usize,
+    current_color: [u8; 3],
 }
 
 impl FrameBufferWriter {
@@ -49,11 +54,37 @@ impl FrameBufferWriter {
             info,
             x_pos: BORDER_PADDING,
             y_pos: BORDER_PADDING,
+            current_color: COLOR_WHITE,
         };
         logger.clear();
         logger
+    } 
+    
+    /// Prints text with automatic wrapping, scrolling, and ANSI-like escape sequences.
+    pub fn print(&mut self, text: &str) {
+        let mut chars = text.chars().peekable();
+        while let Some(c) = chars.next() {
+            match c {
+                '\\' => {
+                    if let Some(next) = chars.next() {
+                        match next {
+                            'c' => self.current_color = COLOR_BLUE,  // Change to blue
+                            'r' => self.current_color = COLOR_WHITE, // Reset to white
+                            _ => self.write_char(c),                // Unknown sequence
+                        }
+                    }
+                }
+                '\n' => self.newline(),
+                '\t' => {
+                    let tab_size = 4; // Number of spaces for a tab
+                    for _ in 0..tab_size {
+                        self.write_char(' ');
+                    }
+                },
+                _ => self.write_char(c),
+            }
+        }
     }
-
 
     fn newline(&mut self) {
         self.y_pos += font_constants::CHAR_RASTER_HEIGHT.val() + LINE_SPACING;
@@ -101,53 +132,52 @@ impl FrameBufferWriter {
     /// Writes a single char to the framebuffer. Takes care of special control characters, such as
     /// newlines and carriage returns.
     fn write_char(&mut self, c: char) {
-        match c {
-            '\n' => self.newline(),
-            '\r' => self.carriage_return(),
-            '\t' => {
-                let tab_size = 4; // Number of spaces for a tab
-                for _ in 0..tab_size {
-                    self.write_char(' ');
-                }
-            },
-            c => {
-                let new_xpos = self.x_pos + font_constants::CHAR_RASTER_WIDTH;
-                if new_xpos >= self.width() {
-                    self.newline();
-                }
-                let new_ypos = self.y_pos + font_constants::CHAR_RASTER_HEIGHT.val() + BORDER_PADDING;
-                if new_ypos >= self.height() {
-                    self.scroll_screen();
-                }
-                self.write_rendered_char(get_char_raster(c));
-            }
+        if c == '\n' {
+            self.newline();
+            return;
         }
+
+        let char_width = font_constants::CHAR_RASTER_WIDTH;
+        if self.x_pos + char_width >= self.width() {
+            self.newline();
+        }
+
+        let char_height = CHAR_RASTER_HEIGHT.val();
+        if self.y_pos + char_height >= self.height() {
+            self.scroll_screen();
+        }
+
+        self.write_rendered_char(get_char_raster(c));
     }
 
     /// Prints a rendered char into the framebuffer.
     /// Updates self.x_pos.
     fn write_rendered_char(&mut self, rendered_char: RasterizedChar) {
+        let x_start = self.x_pos;
+        let y_start = self.y_pos;
+
         for (y, row) in rendered_char.raster().iter().enumerate() {
             for (x, byte) in row.iter().enumerate() {
-                self.write_pixel(self.x_pos + x, self.y_pos + y, *byte);
+                if *byte > 0 {
+                    self.write_pixel(x_start + x, y_start + y, *byte);
+                }
             }
         }
         self.x_pos += rendered_char.width() + LETTER_SPACING;
     }
 
+
     fn write_pixel(&mut self, x: usize, y: usize, intensity: u8) {
+        if x >= self.width() || y >= self.height() {
+            return;
+        }
+
         let pixel_offset = y * self.info.stride + x;
-        let color = match self.info.pixel_format {
-            PixelFormat::Rgb => [intensity, intensity, intensity / 2, 0],
-            PixelFormat::Bgr => [intensity / 2, intensity, intensity, 0],
-            PixelFormat::U8 => [if intensity > 200 { 0xf } else { 0 }, 0, 0, 0],
-            other => {
-                // set a supported (but invalid) pixel format before panicking to avoid a double
-                // panic; it might not be readable though
-                self.info.pixel_format = PixelFormat::Rgb;
-                panic!("pixel format {:?} not supported in logger", other)
-            }
-        };
+        let color = [
+            (self.current_color[0] as u16 * intensity as u16 / 255) as u8,
+            (self.current_color[1] as u16 * intensity as u16 / 255) as u8,
+            (self.current_color[2] as u16 * intensity as u16 / 255) as u8,
+        ];
         let bytes_per_pixel = self.info.bytes_per_pixel;
         let byte_offset = pixel_offset * bytes_per_pixel;
         self.framebuffer[byte_offset..(byte_offset + bytes_per_pixel)]
