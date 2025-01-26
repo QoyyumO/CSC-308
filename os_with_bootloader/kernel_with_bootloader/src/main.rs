@@ -37,17 +37,17 @@ fn my_entry_point(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     // Set the cursor to a new position (e.g., x = 500, y = 50)
     frame_buffer_writer.set_cursor_position(500, 70);
     writeln!(frame_buffer_writer, "Writing at position (500, 70)...").unwrap();
-
+     
     // Write more text, which will continue from the new cursor position
     writeln!(frame_buffer_writer, "This text follows the previous line.").unwrap();
 
     // Test screen scrolling by writing multiple lines
-    for i in 0..60 {
+    for i in 0..40 {
         writeln!(frame_buffer_writer, "Line {}: Testing screen scrolling...", i).unwrap();
     }
 
     // Set the cursor to a position near the bottom of the screen
-    frame_buffer_writer.set_cursor_position(500, frame_buffer_info.height + 70);
+    frame_buffer_writer.set_cursor_position(500, frame_buffer_info.height - 50 );
     writeln!(frame_buffer_writer, "Writing near the bottom of the screen...").unwrap();
 
     // Loop forever to keep the kernel running
