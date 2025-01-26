@@ -31,8 +31,8 @@ fn my_entry_point(_boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     let buffer = _boot_info.framebuffer.as_mut().unwrap().buffer_mut();
     let mut frame_buffer_writer = FrameBufferWriter::new(buffer, frame_buffer_info);
 
-
-    frame_buffer_writer.print("Hello, world!\nThis is a test.\n\\cBlue text\\r \tIndented Text");  
+    // c for blue, r for red g for green, w for reset
+    frame_buffer_writer.print("Hello, world!\nThis is a test.\n\\cBlue text\\w \tIndented Text");  
 
     // Loop forever to keep the kernel running
     loop {

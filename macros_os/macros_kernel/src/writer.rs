@@ -18,10 +18,6 @@ const LETTER_SPACING: usize = 0;
 /// Padding from the border. Prevent that font is too close to border.
 const BORDER_PADDING: usize = 1;
 
-// ANSI-like color codes
-const COLOR_BLUE: [u8; 3] = [255, 0, 0]; // RGB for blue
-const COLOR_WHITE: [u8; 3] = [255, 255, 255]; // RGB for white (default color)
-
 /// Returns the raster of the given char or the raster of [font_constants::BACKUP_CHAR].
 fn get_char_raster(c: char) -> RasterizedChar {
     fn get(c: char) -> Option<RasterizedChar> {
@@ -54,13 +50,13 @@ impl FrameBufferWriter {
             info,
             x_pos: BORDER_PADDING,
             y_pos: BORDER_PADDING,
-            current_color: COLOR_WHITE,
+            current_color: [255, 255, 255],
         };
         logger.clear();
         logger
     } 
     
-    /// Prints text with automatic wrapping, scrolling, and ANSI-like escape sequences.
+    /// Prints color, tab, new line
     pub fn print(&mut self, text: &str) {
         let mut chars = text.chars().peekable();
         while let Some(c) = chars.next() {
@@ -68,15 +64,17 @@ impl FrameBufferWriter {
                 '\\' => {
                     if let Some(next) = chars.next() {
                         match next {
-                            'c' => self.current_color = COLOR_BLUE,  // Change to blue
-                            'r' => self.current_color = COLOR_WHITE, // Reset to white
+                            'c' => self.current_color = [255, 0,0],  // Change to blue
+                            'r' => self.current_color = [0, 0,255], // Change to red
+                            'g' => self.current_color = [0,255,0], // Change to green
+                            'w' => self.current_color = [255, 255, 255], // Reset to white
                             _ => self.write_char(c),                // Unknown sequence
                         }
                     }
                 }
                 '\n' => self.newline(),
                 '\t' => {
-                    let tab_size = 4; // Number of spaces for a tab
+                    let tab_size = 4; 
                     for _ in 0..tab_size {
                         self.write_char(' ');
                     }
