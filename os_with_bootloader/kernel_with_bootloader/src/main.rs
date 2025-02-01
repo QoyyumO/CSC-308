@@ -6,13 +6,9 @@ use core::fmt::Write;
 use bootloader_api::config::Mapping;
 use x86_64::instructions::hlt;
 use writer::FrameBufferWriter;
+mod interrupts;
+use interrupts::{init_idt,PICS};
 
-#[panic_handler]
-fn panic(_info: &core::panic::PanicInfo) -> ! {
-    loop {
-        hlt();
-    }
-}
 
 
 // Use the entry_point macro to register the entry point function:
@@ -52,8 +48,21 @@ fn my_entry_point(boot_info: &'static mut bootloader_api::BootInfo) -> ! {
     frame_buffer_writer.set_cursor_position(500, frame_buffer_info.height - 50 );
     writeln!(frame_buffer_writer, "Writing near the bottom of the screen...").unwrap();
 
+
+
+    init_idt();
+    unsafe {PICS.lock().initialize()};
+    x86_64::instructions::interrupts::enable();
+
     // Loop forever to keep the kernel running
     loop {
         hlt(); // Stop x86_64 from being unnecessarily busy while looping
+    }
+}
+
+#[panic_handler]
+fn panic(_info: &core::panic::PanicInfo) -> ! {
+    loop {
+        hlt();
     }
 }

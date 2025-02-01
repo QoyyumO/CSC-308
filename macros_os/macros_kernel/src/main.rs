@@ -36,6 +36,6 @@ fn my_entry_point(_boot_info: &'static mut bootloader_api::BootInfo) -> ! {
 
     // Loop forever to keep the kernel running
     loop {
-        hlt(); // Stop x86_64 from being unnecessarily busy while looping
+        hlt(); // Stop x86_64 from being unnecessarily3 busy while looping
     }
 }

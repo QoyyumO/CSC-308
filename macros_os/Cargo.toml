@@ -11,4 +11,4 @@ bootloader = "0.11"
 macros_kernel = { path = "macros_kernel", artifact = "bin", target = "x86_64-unknown-none" }
 
 [workspace]
-members = ["macros_kernel"]
+members = ["macros_kernel", "practice"]
